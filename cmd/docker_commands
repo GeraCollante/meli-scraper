@@ -1,0 +1,7 @@
+sudo docker build -t myimage .
+
+sudo docker run -it -p 8888:8888 myimage
+
+sudo docker exec -ti 42e24393fe9e bash
+
+docker run -v $(pwd):/app -p 8888:8888 myimage

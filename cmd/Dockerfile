@@ -1,0 +1,39 @@
+FROM jupyter/scipy-notebook:latest
+
+# install jupyterlab
+RUN jupyter labextension install @jupyterlab/toc
+
+# Set environment variables for Chrome
+ENV DISPLAY=:99
+
+# Install necessary tools and libraries
+RUN apt-get update && apt-get install -y \
+    wget \
+    unzip \
+    xvfb \
+    gnupg \
+    --no-install-recommends \
+    && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+    && dpkg -i google-chrome-stable_current_amd64.deb; apt-get -fy install
+
+# Install Chrome WebDriver
+RUN LATEST=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE) && \
+    echo "Installing chromium webdriver version ${LATEST}" && \
+    wget http://chromedriver.storage.googleapis.com/$LATEST/chromedriver_linux64.zip && \
+    unzip chromedriver_linux64.zip -d /usr/local/bin && \
+    rm chromedriver_linux64.zip
+    
+# Install Python packages
+RUN pip install selenium
+
+COPY requirements.txt /app/requirements.txt
+
+RUN pip install -r /app/requirements.txt
+
+COPY . /app
+
+WORKDIR /app
+
+EXPOSE 8888
+
+CMD ["jupyter", "lab", "--ip=0.0.0.0", "--allow-root"]

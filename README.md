@@ -1,2 +1,2 @@
-# meli-scraper
+# Meli-Scraper
 MELI scraper for products and cars

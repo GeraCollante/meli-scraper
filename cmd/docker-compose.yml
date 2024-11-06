@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  notebook:
+    build:
+      dockerfile: Dockerfile_JN
+    container_name: notebook
+    volumes:
+      - .:/app:delegated
+    ports:
+      - "8888:8888"
+#    command: ["jupyter", "lab", "--ip=0.0.0.0", "--allow-root"]
+    command: ["jupyter", "notebook", "--ip=0.0.0.0", "--allow-root"]
